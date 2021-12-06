@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "Löschen Benutzer";
+}
+
+@model Benutzer
+
+<div class="container p-3 my-3 border">
+    <h1 class="display-4">Löschen Benutzer</h1>
+    <h2>Wollen Sie wirklich löschen?</h2>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Benutzername)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Benutzername)</dd>
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Passwort)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Passwort)</dd>
+    </dl>
+
+    <form asp-action="DeleteUser">
+        <input type="hidden" asp-for="id_Benutzer" />
+        <input class="btn btn-primary" type="submit" value="Ja" />
+        <a class="btn btn-danger" asp-action="Index">Zurück</a>
+    </form>
+</div>
