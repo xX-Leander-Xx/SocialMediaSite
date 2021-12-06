@@ -4,10 +4,12 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SocialMediaSite.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace SocialMediaSite
 {
@@ -24,6 +26,8 @@ namespace SocialMediaSite
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            string conStr = this.Configuration.GetConnectionString("SocialMediaSite");
+            services.AddDbContext<DbSocialMediaSite>(options => options.UseSqlServer(conStr));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
