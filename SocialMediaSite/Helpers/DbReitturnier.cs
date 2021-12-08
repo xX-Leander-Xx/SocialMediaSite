@@ -15,5 +15,6 @@ namespace SocialMediaSite.Helpers
         }
 
         public DbSet<Benutzer> Benutzer { get; set; }
+        public DbSet<Post> Post { get; set; }
     }
 }

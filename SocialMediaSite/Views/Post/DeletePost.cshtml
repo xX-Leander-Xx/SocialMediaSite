@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "Löschen Post";
+}
+
+@model Post
+
+<div class="container p-3 my-3 border">
+    <h1 class="display-4">Löschen Post</h1>
+    <h2>Wollen Sie wirklich löschen?</h2>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Titel)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Titel)</dd>
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Inhalt)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Inhalt)</dd>
+    </dl>
+
+    <form asp-action="DeleteUser">
+        <input type="hidden" asp-for="id_Post" />
+        <input class="btn btn-primary" type="submit" value="Ja" />
+        <a class="btn btn-danger" asp-action="Index">Zurück</a>
+    </form>
+</div>

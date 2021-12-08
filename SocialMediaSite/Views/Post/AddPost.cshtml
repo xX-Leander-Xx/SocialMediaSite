@@ -1,0 +1,31 @@
+﻿@{
+    ViewData["Title"] = "Posts Page";
+}
+
+@model Post
+
+<div class="text-center">
+    <h1 class="display-4">Boing</h1>
+    <hr />
+    <form asp-action="AddPost">
+        <div class="form-group">
+            <label asp-for="Titel"></label>
+            <input asp-for="Titel" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label asp-for="Inhalt"></label>
+            <input asp-for="Inhalt" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label asp-for="fk_Kategorie"></label>
+            <select asp-for="fk_Kategorie" class="form-control">
+                <option value="Gaming">Gaming</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <input class="btn btn-primary" type="submit" value="Speichern" />
+            <a class="btn btn-danger" asp-action="Index">Zurück</a>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,43 @@
+﻿@{
+    ViewData["Title"] = "LogIn";
+    Layout = null;
+}
+
+@model Benutzer
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Social Media</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <div class="container">
+    <main role="main" class="pb-3">
+        <div class="text-center">
+            <h1 class="display-4">Login</h1>
+            <hr />
+            <form asp-action="Login">
+                <div class="form-group">
+                    <label asp-for="Benutzername"></label>
+                    <input asp-for="Benutzername" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Passwort"></label>
+                    <input asp-for="Passwort" class="form-control" />
+                </div>
+
+                <div class="form-group">
+                    <input class="btn btn-primary" type="submit" value="Speichern" />
+                    <a class="btn btn-danger" asp-action="AddUser">Registirieren</a>
+                </div>
+            </form>
+        </div>
+    </main>
+</div>
+</body>
+</html>
+

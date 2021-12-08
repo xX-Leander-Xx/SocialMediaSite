@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SocialMediaSite.Helpers;
@@ -14,13 +15,17 @@ namespace SocialMediaSite.Controllers
     public class BenutzerController : Controller
     {
         private DbSocialMediaSite _dbSocialMediaSite;
-        
+
         public BenutzerController(DbSocialMediaSite dbSocialMediaSite)
         {
             _dbSocialMediaSite = dbSocialMediaSite;
         }
         public async Task<IActionResult> IndexAsync()
         {
+            if (Request.Cookies["user_id"] == null)
+            {
+                return RedirectToAction(nameof(LogIn));
+            }
             var benutzer = await _dbSocialMediaSite.Benutzer.ToListAsync();
             return View(benutzer);
         }
@@ -105,6 +110,39 @@ namespace SocialMediaSite.Controllers
             await _dbSocialMediaSite.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult LogIn()
+        {
+            if (Request.Cookies["user_id"] != null)
+            {
+                Response.Cookies.Delete("user_id");
+            }
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> LogIn([Bind("Benutzername, Passwort")] Benutzer logInData)
+        {
+            var benutzer = await _dbSocialMediaSite.Benutzer.FirstOrDefaultAsync(b => b.Benutzername == logInData.Benutzername);
+
+            if (benutzer == null)
+            {
+                return NotFound();
+            }
+
+            if (benutzer.Passwort.Trim().Equals(logInData.Passwort))
+            {
+                CookieOptions cookies = new CookieOptions();
+                cookies.Expires = DateTime.Now.AddDays(2);
+                Response.Cookies.Append("user_id", benutzer.id_Benutzer.ToString(), cookies);
+                Console.WriteLine(Request.Cookies["user_id"]);
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                return View();
+            }
         }
     }
 }
