@@ -6,30 +6,20 @@
 
 <div class="text-center">
     <h1 class="display-4">Posts</h1>
-    <div style="text-align:right; margin-right:100px;">
+    <div>
         <a asp-action="AddPost" class="btn btn-outline-primary">Neuer Post</a>
     </div>
-    <div class="table-responsive">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>@Html.DisplayNameFor(model => model.Titel)</th>
-                    <th>&nbsp;</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var post in Model)
-                {
-                <tr>
-                    <td>@Html.DisplayFor(modelItem => post.Titel)<br />
-                    @Html.DisplayFor(modelItem => post.Inhalt)</td>
-                    
-                    <td>
-                        <a asp-action="DeleteUser" class="btn btn-outline-danger" asp-route-id_post="@post.id_Post">Löschen</a>
-                    </td>
-                </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+
+    @foreach (var post in Model)
+    {
+        <div class="card text-center" style="width: 24rem;">
+            <div class="card-body align-items-center">
+                <h5 class="card-title">@Html.DisplayFor(modelItem => post.Titel)</h5>
+                <h6 class="card-subtitle mb-2 text-muted">@Html.DisplayFor(modelItem => post.benutzer.Benutzername)</h6>
+                <p class="card-text">@Html.DisplayFor(modelItem => post.Inhalt)</p>
+                <p class="text-muted">@Html.DisplayFor(modelItem => post.PostDate);</p>
+                <a asp-action="DeletePost" class="card-link" asp-route-id_post="@post.id_Post">Löschen</a>
+            </div>
+        </div>
+    }
 </div>

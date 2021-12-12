@@ -15,7 +15,7 @@
         <dd class="col-sm-9">@Html.DisplayFor(model => model.Inhalt)</dd>
     </dl>
 
-    <form asp-action="DeleteUser">
+    <form asp-action="DeletePost">
         <input type="hidden" asp-for="id_Post" />
         <input class="btn btn-primary" type="submit" value="Ja" />
         <a class="btn btn-danger" asp-action="Index">Zurück</a>

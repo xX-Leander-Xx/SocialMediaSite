@@ -6,15 +6,11 @@
 
 <div class="text-center">
     <h1 class="display-4">Benutzer</h1>
-    <div style="text-align:right; margin-right:100px;">
-        <a asp-action="AddUser" class="btn btn-outline-primary">Hinzufügen</a>
-    </div>
     <div class="table-responsive">
         <table class="table">
             <thead>
                 <tr>
                     <th>@Html.DisplayNameFor(model => model.Benutzername)</th>
-                    <th>&nbsp;</th>
                 </tr>
             </thead>
             <tbody>
@@ -23,8 +19,11 @@
                     <tr>
                         <td>@Html.DisplayFor(modelItem => benutzer.Benutzername)</td>
                         <td>
-                            <a asp-action="AddUser" class="btn btn-outline-primary" asp-route-int="@benutzer.id_Benutzer">Bearbeiten</a>
+                            <a asp-controller="Post" asp-action="BenutzerPost" class="btn btn-outline-primary" asp-route-id_benutzer="@benutzer.id_Benutzer">Profil</a>
+                            @if (User.IsInRole("Admin"))
+                            {
                             <a asp-action="DeleteUser" class="btn btn-outline-danger" asp-route-id_benutzer="@benutzer.id_Benutzer">Löschen</a>
+                            }
                         </td>
                     </tr>
 

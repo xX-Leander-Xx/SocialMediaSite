@@ -15,29 +15,31 @@
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
-    <div class="container">
-    <main role="main" class="pb-3">
-        <div class="text-center">
-            <h1 class="display-4">Login</h1>
-            <hr />
-            <form asp-action="Login">
+    <div>
+        <div class="card h-100" style="width: 24rem; margin: auto;">
+            <h5 class="card-header h3">Log In</h5>
+            <form class="m-3" asp-action="Login">
                 <div class="form-group">
-                    <label asp-for="Benutzername"></label>
+                    <label class="font-weight-bold" asp-for="Benutzername"></label>
                     <input asp-for="Benutzername" class="form-control" />
                 </div>
                 <div class="form-group">
-                    <label asp-for="Passwort"></label>
+                    <label class="font-weight-bold" asp-for="Passwort"></label>
                     <input asp-for="Passwort" class="form-control" />
                 </div>
-
+                <a class="float-right justify-content-center" asp-action="AddUser">Registrieren</a>
                 <div class="form-group">
-                    <input class="btn btn-primary" type="submit" value="Speichern" />
-                    <a class="btn btn-danger" asp-action="AddUser">Registirieren</a>
+                    <input class="btn btn-primary" type="submit" value="Log In" />
                 </div>
+                @if (ViewBag.LogInError != null)
+                {
+                    <p class="text-danger">@ViewBag.LogInError</p>
+                }
+
             </form>
         </div>
-    </main>
-</div>
+    </div>
+    
 </body>
 </html>
 

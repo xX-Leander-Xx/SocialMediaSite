@@ -1,25 +1,44 @@
 ﻿@{
     ViewData["Title"] = "Benutzer Page";
+    Layout = null;
 }
 
 @model Benutzer
 
-<div class="text-center">
-    <h1 class="display-4">Boing</h1>
-    <hr />
-    <form asp-action="AddUser">
-        <div class="form-group">
-            <label asp-for="Benutzername"></label>
-            <input asp-for="Benutzername" class="form-control" />
-        </div>
-        <div class="form-group">
-            <label asp-for="Passwort"></label>
-            <input asp-for="Passwort" class="form-control" />
-        </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Social Media</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <div>
+        <div class="card h-100" style="width: 24rem; margin: auto;">
+            <h5 class="card-header h3">Log In</h5>
+            <form class="m-3" asp-action="AddUser">
+                <div class="form-group">
+                    <label class="font-weight-bold" asp-for="Benutzername"></label>
+                    <input asp-for="Benutzername" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label class="font-weight-bold" asp-for="Passwort"></label>
+                    <input asp-for="Passwort" class="form-control" />
+                </div>
+                <a class="float-right justify-content-center" asp-action="LogIn">Zurück zum Login</a>
+                <div class="form-group">
+                    <input class="btn btn-primary" type="submit" value="Konto Erstellen" />
+                </div>
+                @if (ViewBag.LogInError != null)
+                {
+                    <p class="text-danger">@ViewBag.LogInError</p>
+                }
 
-        <div class="form-group">
-            <input class="btn btn-primary" type="submit" value="Speichern" />
-            <a class="btn btn-danger" asp-action="Index">Zurück</a>
+            </form>
         </div>
-    </form>
-</div>
+    </div>
+
+</body>
+</html>

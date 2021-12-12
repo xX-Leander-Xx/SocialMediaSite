@@ -15,7 +15,18 @@ namespace SocialMediaSite.Models
         public string Titel { get; set; }
         [Display(Name = "Inhalt")]
         public string Inhalt { get; set; }
+        
+        [Display(Name = "Datum")]
+        public DateTime PostDate { get; set; }
+
         [Display(Name = "Kategorie")]
-        public string fk_Kategorie { get; set; }
+        [ForeignKey("kategorie")]
+        public int fk_id_Kategorie { get; set; }
+        public virtual Kategorie kategorie { get; set; }
+
+        [ForeignKey("benutzer")]
+        public int fk_id_Benutzer { get; set; }
+        public virtual Benutzer benutzer { get; set; }
+
     }
-}
+} 

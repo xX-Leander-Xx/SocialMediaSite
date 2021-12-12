@@ -1,0 +1,34 @@
+﻿@{
+    ViewData["Title"] = "Posts Page";
+}
+
+@model IEnumerable<Post>
+
+<div class="text-center">
+    <h1 class="display-4">Posts</h1>
+    <div style="text-align:right; margin-right:100px;">
+        <a asp-controller="Kategorie" asp-action="FollowCategory" asp-route-id_kategorie="@ViewData["id_Kategorie"]" class="btn btn-outline-primary">@ViewBag.Follow</a>
+    </div>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.Titel)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var post in Model)
+                {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => post.Titel)<br />
+                            @Html.DisplayFor(modelItem => post.Inhalt)</td>
+                    
+                            <td>
+                                <a asp-action="DeletePost" class="btn btn-outline-danger" asp-route-id_post="@post.id_Post">Löschen</a>
+                            </td>
+                        </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

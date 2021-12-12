@@ -17,12 +17,16 @@
             <input asp-for="Inhalt" class="form-control" />
         </div>
         <div class="form-group">
-            <label asp-for="fk_Kategorie"></label>
-            <select asp-for="fk_Kategorie" class="form-control">
-                <option value="Gaming">Gaming</option>
+            <label asp-for="fk_id_Kategorie"></label>
+            <select asp-for="fk_id_Kategorie" class="form-control">
+                <option value="1">Technologie</option>
+                <option value="2">Sport</option>
+                <option value="3">Film & Serien</option>
+                <option value="4">Gaming</option>
+                <option value="5">Arbeit</option>
+                <option value="6">Kochen</option>
             </select>
         </div>
-
         <div class="form-group">
             <input class="btn btn-primary" type="submit" value="Speichern" />
             <a class="btn btn-danger" asp-action="Index">Zurück</a>

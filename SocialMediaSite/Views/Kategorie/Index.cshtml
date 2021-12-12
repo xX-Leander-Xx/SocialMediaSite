@@ -1,0 +1,30 @@
+﻿@{
+    ViewData["Title"] = "Kategorie Page";
+}
+
+@model IEnumerable<Kategorie>
+
+<div class="text-center">
+    <h1 class="display-4">Kategorie</h1>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.KategorieName)</th>
+                    <th>&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var kategorie in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => kategorie.KategorieName)<br />
+                        <td>
+                            <a asp-controller="Post" asp-action="KategoriePost" class="btn btn-primary" asp-route-id_kategorie="@kategorie.id_Kategorie">Posts Ansehen</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
