@@ -160,8 +160,8 @@ namespace SocialMediaSite.Controllers
             if (benutzerBenutzer == null)
             {
                 benutzerBenutzer = new BenutzerBenutzer();
-                benutzerBenutzer.fk_id_BenutzerGefolgt = id_Benutzer;
                 benutzerBenutzer.fk_id_BenutzerFolgen = int.Parse(HttpContext.Request.Cookies["id_LoggedIn"]);
+                benutzerBenutzer.fk_id_BenutzerGefolgt = id_Benutzer;
                 _dbSocialMediaSite.BenutzerBenutzer.Add(benutzerBenutzer);
                 await _dbSocialMediaSite.SaveChangesAsync();
             }
