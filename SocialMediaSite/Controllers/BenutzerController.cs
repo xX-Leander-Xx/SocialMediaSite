@@ -44,25 +44,16 @@ namespace SocialMediaSite.Controllers
         //Runs after Signing up
         [AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> AddUser(int id_Benutzer, [Bind("Benutzername, Passwort")] Benutzer benutzerData)
+        public async Task<IActionResult> AddUser([Bind("Benutzername, Passwort")] Benutzer benutzerData)
         {
-            var benutzer = await _dbSocialMediaSite.Benutzer.FirstOrDefaultAsync(b => b.id_Benutzer == id_Benutzer);
-
-            bool benutzerExist = false;
-
-            if (benutzer == null)
-                benutzer = new Benutzer();
-            else
-                benutzerExist = true;
+            Benutzer benutzer = new Benutzer();
+            
 
             benutzer.Benutzername = benutzerData.Benutzername;
             benutzer.Passwort = benutzerData.Passwort;
             benutzer.isAdmin = "User";
 
-            if (benutzerExist)
-                _dbSocialMediaSite.Benutzer.Update(benutzer);
-            else
-                _dbSocialMediaSite.Benutzer.Add(benutzer);
+            _dbSocialMediaSite.Benutzer.Add(benutzer);
 
             await _dbSocialMediaSite.SaveChangesAsync();
 
@@ -98,6 +89,16 @@ namespace SocialMediaSite.Controllers
             {
                 return NotFound();
             }
+
+            var BenutzerBenutzerList = await _dbSocialMediaSite.BenutzerBenutzer.ToListAsync();
+            IEnumerable<BenutzerBenutzer> benutzerBenutzer = BenutzerBenutzerList.Where(b => b.fk_id_BenutzerFolgen == id_benutzer || b.fk_id_BenutzerGefolgt == id_benutzer);
+            foreach(BenutzerBenutzer benutzer2 in benutzerBenutzer)
+            {
+                _dbSocialMediaSite.BenutzerBenutzer.Remove(benutzer2);
+            }
+
+            //Guten Tag Herr Stadelmann. Ich weis dieser Code sieht krunkig aus und komisch, aber leider ist es nicht anderst möglich. Bitte lachen Sie mich nicht aus!!
+            await _dbSocialMediaSite.SaveChangesAsync();
 
             _dbSocialMediaSite.Benutzer.Remove(benutzer);
             await _dbSocialMediaSite.SaveChangesAsync();
@@ -174,5 +175,23 @@ namespace SocialMediaSite.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpPost]
+        public async Task<IActionResult> ChangeUser([Bind("Passwort, Passwort")] Benutzer benutzerData)
+        {
+            if(Password)
+
+            benutzer.Benutzername = benutzerData.Benutzername;
+            benutzer.Passwort = benutzerData.Passwort;
+            benutzer.isAdmin = "User";
+
+            if (benutzerExist)
+                _dbSocialMediaSite.Benutzer.Update(benutzer);
+            else
+                _dbSocialMediaSite.Benutzer.Add(benutzer);
+
+            await _dbSocialMediaSite.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
