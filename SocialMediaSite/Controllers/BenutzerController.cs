@@ -47,7 +47,12 @@ namespace SocialMediaSite.Controllers
         public async Task<IActionResult> AddUser([Bind("Benutzername, Passwort")] Benutzer benutzerData)
         {
             Benutzer benutzer = new Benutzer();
-            
+
+            if (benutzerData.Benutzername.Length > 20 || benutzerData.Passwort.Length > 20)
+            {
+                ViewBag.Long = "Benutzername und Passwort dürfen nur 20 Charakter lang sein";
+                return View();
+            }
 
             benutzer.Benutzername = benutzerData.Benutzername;
             benutzer.Passwort = benutzerData.Passwort;
@@ -63,7 +68,6 @@ namespace SocialMediaSite.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteUser(int? id_benutzer)
         {
-
             if (id_benutzer == null)
             {
                 return NotFound();
@@ -90,6 +94,7 @@ namespace SocialMediaSite.Controllers
                 return NotFound();
             }
 
+            /*
             var BenutzerBenutzerList = await _dbSocialMediaSite.BenutzerBenutzer.ToListAsync();
             IEnumerable<BenutzerBenutzer> benutzerBenutzer = BenutzerBenutzerList.Where(b => b.fk_id_BenutzerFolgen == id_benutzer || b.fk_id_BenutzerGefolgt == id_benutzer);
             foreach(BenutzerBenutzer benutzer2 in benutzerBenutzer)
@@ -99,6 +104,7 @@ namespace SocialMediaSite.Controllers
 
             //Guten Tag Herr Stadelmann. Ich weis dieser Code sieht krunkig aus und komisch, aber leider ist es nicht anderst möglich. Bitte lachen Sie mich nicht aus!!
             await _dbSocialMediaSite.SaveChangesAsync();
+            */
 
             _dbSocialMediaSite.Benutzer.Remove(benutzer);
             await _dbSocialMediaSite.SaveChangesAsync();
@@ -137,7 +143,7 @@ namespace SocialMediaSite.Controllers
 
                 HttpContext.Response.Cookies.Append("id_LoggedIn", benutzer.id_Benutzer.ToString());
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), nameof(Post));
             }
             else
             {
@@ -175,23 +181,32 @@ namespace SocialMediaSite.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpPost]
-        public async Task<IActionResult> ChangeUser([Bind("Passwort, Passwort")] Benutzer benutzerData)
+        public IActionResult ChangeUser()
         {
-            if(Password)
+            return View();
+        }
 
-            benutzer.Benutzername = benutzerData.Benutzername;
-            benutzer.Passwort = benutzerData.Passwort;
-            benutzer.isAdmin = "User";
+        [HttpPost]
+        public async Task<IActionResult> ChangeUser([Bind("Passwort")] Benutzer benutzerData)
+        {
+            string altesPasswort = Request.Form["oldPassword"];
 
-            if (benutzerExist)
+            var benutzer = await _dbSocialMediaSite.Benutzer.FirstOrDefaultAsync(b => b.id_Benutzer == int.Parse(HttpContext.Request.Cookies["id_LoggedIn"]));
+
+            if(benutzer == null)
+            {
+                return NotFound();
+            }
+            
+            if (benutzer.Passwort.Trim() == altesPasswort){
+                benutzer.Passwort = benutzerData.Passwort;
                 _dbSocialMediaSite.Benutzer.Update(benutzer);
-            else
-                _dbSocialMediaSite.Benutzer.Add(benutzer);
+                await _dbSocialMediaSite.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
 
-            await _dbSocialMediaSite.SaveChangesAsync();
-
-            return RedirectToAction(nameof(Index));
+            ViewBag.Error = "Falsches Passwort";
+            return View();
         }
     }
 }

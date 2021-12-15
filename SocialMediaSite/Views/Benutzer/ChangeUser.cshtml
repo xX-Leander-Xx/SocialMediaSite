@@ -9,8 +9,8 @@
         <h5 class="card-header h3">Passwort ändern</h5>
         <form class="m-3" asp-action="ChangeUser">
             <div class="form-group">
-                <label class="font-weight-bold" asp-for="Passwort">Altes Passwort</label>
-                <input asp-for="Passwort" class="form-control" />
+                <label class="font-weight-bold">Altes Passwort</label>
+                <input class="form-control" name="oldPassword"/>
             </div>
             <div class="form-group">
                 <label class="font-weight-bold" asp-for="Passwort"></label>
@@ -19,9 +19,9 @@
             <div class="form-group">
                 <input class="btn btn-primary" type="submit" value="Passwort ändern" />
             </div>
-            @if (ViewBag.LogInError != null)
+            @if (ViewBag.Error != null)
             {
-                <p class="text-danger">@ViewBag.LogInError</p>
+                <p class="text-danger">@ViewBag.Error</p>
             }
 
         </form>

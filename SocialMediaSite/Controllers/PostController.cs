@@ -44,6 +44,8 @@ namespace SocialMediaSite.Controllers
         {
             var post = new Post();
 
+
+
             post.Titel = postData.Titel;
             post.Inhalt = postData.Inhalt;
             post.PostDate = DateTime.Now;

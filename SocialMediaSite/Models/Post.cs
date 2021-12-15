@@ -11,8 +11,12 @@ namespace SocialMediaSite.Models
         [Key]
         [ReadOnly(true)]
         public int id_Post { get; set; }
+        [Required]
+        [StringLength(30)]
         [Display(Name = "Titel")]
         public string Titel { get; set; }
+        [Required]
+        [StringLength(140)]
         [Display(Name = "Inhalt")]
         public string Inhalt { get; set; }
         

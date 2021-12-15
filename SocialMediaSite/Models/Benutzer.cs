@@ -12,7 +12,12 @@ namespace SocialMediaSite.Models
         [ReadOnly(true)]
         public int id_Benutzer { get; set; }
         [Display(Name = "Benutzer")]
+
+        [Required]
+        [StringLength(20)]
         public string Benutzername { get; set; }
+        [Required]
+        [StringLength(20)]
         public string Passwort { get; set; }
         public string isAdmin { get; set; }
     }
