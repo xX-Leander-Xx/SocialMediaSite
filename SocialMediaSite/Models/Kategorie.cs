@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -13,6 +14,6 @@ namespace SocialMediaSite.Models
         public int id_Kategorie { get; set; }
         [Display(Name = "Kategorie")]
         public string KategorieName { get; set; }
-
+        public BenutzerKategorie BenutzerKategorie { get; set; }
     }
 }

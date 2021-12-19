@@ -13,6 +13,7 @@ using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web.Helpers;
 
 namespace SocialMediaSite.Controllers
 {
@@ -29,7 +30,6 @@ namespace SocialMediaSite.Controllers
 
         public async Task<IActionResult> IndexAsync()
         {
-            Console.WriteLine(User.IsInRole("Admin"));
             var benutzer = await _dbSocialMediaSite.Benutzer.ToListAsync();
             return View(benutzer);
         }
@@ -48,17 +48,39 @@ namespace SocialMediaSite.Controllers
         {
             Benutzer benutzer = new Benutzer();
 
-            if (benutzerData.Benutzername.Length > 20 || benutzerData.Passwort.Length > 20)
+            if (benutzerData.Benutzername == null || benutzerData.Passwort == null)
             {
-                ViewBag.Long = "Benutzername und Passwort dürfen nur 20 Charakter lang sein";
+                ViewBag.CreateError = "Bitte füllen Sie alle Felder aus";
                 return View();
             }
 
+            if (benutzerData.Benutzername.Length > 20 || benutzerData.Passwort.Length > 20)
+            {
+                ViewBag.CreateError = "Benutzername und Passwort dürfen nur 20 Charakter lang sein";
+                return View();
+            }
+
+            if(_dbSocialMediaSite.Benutzer.FirstOrDefault(b => b.Benutzername == benutzerData.Benutzername) != null)
+            {
+                ViewBag.CreateError = "Benutzername existiert schon";
+                return View();
+            }
+            
+
             benutzer.Benutzername = benutzerData.Benutzername;
-            benutzer.Passwort = benutzerData.Passwort;
+            benutzer.Passwort = Crypto.HashPassword(benutzerData.Passwort); ;
             benutzer.isAdmin = "User";
 
             _dbSocialMediaSite.Benutzer.Add(benutzer);
+
+            await _dbSocialMediaSite.SaveChangesAsync();
+
+            int id_benutzer = _dbSocialMediaSite.Benutzer.FirstOrDefault(b => b.Benutzername == benutzerData.Benutzername).id_Benutzer;
+
+            Logs log = new Logs();
+            log.LogInfo = "Benutzer ID: " + id_benutzer + " wurde erstellt.";
+            log.LogDate = DateTime.Now;
+            _dbSocialMediaSite.Logs.Add(log);
 
             await _dbSocialMediaSite.SaveChangesAsync();
 
@@ -83,6 +105,7 @@ namespace SocialMediaSite.Controllers
             return View(benutzer);
         }
 
+        /*
         [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> DeleteUser(int id_benutzer)
@@ -94,23 +117,16 @@ namespace SocialMediaSite.Controllers
                 return NotFound();
             }
 
-            /*
-            var BenutzerBenutzerList = await _dbSocialMediaSite.BenutzerBenutzer.ToListAsync();
-            IEnumerable<BenutzerBenutzer> benutzerBenutzer = BenutzerBenutzerList.Where(b => b.fk_id_BenutzerFolgen == id_benutzer || b.fk_id_BenutzerGefolgt == id_benutzer);
-            foreach(BenutzerBenutzer benutzer2 in benutzerBenutzer)
-            {
-                _dbSocialMediaSite.BenutzerBenutzer.Remove(benutzer2);
-            }
-
-            //Guten Tag Herr Stadelmann. Ich weis dieser Code sieht krunkig aus und komisch, aber leider ist es nicht anderst möglich. Bitte lachen Sie mich nicht aus!!
-            await _dbSocialMediaSite.SaveChangesAsync();
-            */
+            Logs log = new Logs();
+            log.LogInfo = "Benutzer ID: " + int.Parse(HttpContext.Request.Cookies["id_LoggedIn"]) + " hat Benutzer ID: " + id_benutzer + " gelöscht";
+            log.LogDate = DateTime.Now;
+            _dbSocialMediaSite.Logs.Add(log);
 
             _dbSocialMediaSite.Benutzer.Remove(benutzer);
             await _dbSocialMediaSite.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
-        }
+        }*/
 
         [AllowAnonymous]
         public IActionResult LogIn()
@@ -129,7 +145,7 @@ namespace SocialMediaSite.Controllers
                 return NotFound();
             }
 
-            if (benutzer.Passwort.Trim().Equals(logInData.Passwort))
+            if (Crypto.VerifyHashedPassword(benutzer.Passwort.Trim(), logInData.Passwort))
             {
                 var claims = new List<Claim>
                 {
@@ -140,6 +156,14 @@ namespace SocialMediaSite.Controllers
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+
+                Logs log = new Logs();
+                log.LogInfo = "Benutzer ID: " + int.Parse(HttpContext.Request.Cookies["id_LoggedIn"]) + " hat sich eingeloggt.";
+                log.LogDate = DateTime.Now;
+                _dbSocialMediaSite.Logs.Add(log);
+                await _dbSocialMediaSite.SaveChangesAsync();
+
+                await _dbSocialMediaSite.SaveChangesAsync();
 
                 HttpContext.Response.Cookies.Append("id_LoggedIn", benutzer.id_Benutzer.ToString());
 
@@ -154,6 +178,12 @@ namespace SocialMediaSite.Controllers
 
         public async Task<IActionResult> LogOut()
         {
+            Logs log = new Logs();
+            log.LogInfo = "Benutzer ID: " + int.Parse(HttpContext.Request.Cookies["id_LoggedIn"]) + " hat sich ausgeloggt.";
+            log.LogDate = DateTime.Now;
+            _dbSocialMediaSite.Logs.Add(log);
+            await _dbSocialMediaSite.SaveChangesAsync();
+
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction(nameof(LogIn));
         }
@@ -161,8 +191,10 @@ namespace SocialMediaSite.Controllers
         public async Task<IActionResult> FollowUser(int id_Benutzer)
         {
             var benutzerBenutzer = await _dbSocialMediaSite.BenutzerBenutzer.FirstOrDefaultAsync(b => b.fk_id_BenutzerFolgen == int.Parse(HttpContext.Request.Cookies["id_LoggedIn"]) && b.fk_id_BenutzerGefolgt == id_Benutzer);
-            
 
+            Logs log = new Logs();
+            
+            
 
             if (benutzerBenutzer == null)
             {
@@ -170,13 +202,21 @@ namespace SocialMediaSite.Controllers
                 benutzerBenutzer.fk_id_BenutzerFolgen = int.Parse(HttpContext.Request.Cookies["id_LoggedIn"]);
                 benutzerBenutzer.fk_id_BenutzerGefolgt = id_Benutzer;
                 _dbSocialMediaSite.BenutzerBenutzer.Add(benutzerBenutzer);
-                await _dbSocialMediaSite.SaveChangesAsync();
+
+                log.LogInfo = "Benutzer ID: " + int.Parse(HttpContext.Request.Cookies["id_LoggedIn"]) + " hat Benutzer ID: " + benutzerBenutzer.fk_id_BenutzerGefolgt + " gefolgt";
             }
             else
             {
                 _dbSocialMediaSite.BenutzerBenutzer.Remove(benutzerBenutzer);
-                await _dbSocialMediaSite.SaveChangesAsync();
+
+                log.LogInfo = "Benutzer ID: " + int.Parse(HttpContext.Request.Cookies["id_LoggedIn"]) + " hat Benutzer ID: " + benutzerBenutzer.fk_id_BenutzerGefolgt + " entfolgt";
+
             }
+
+            log.LogDate = DateTime.Now;
+            _dbSocialMediaSite.Logs.Add(log);
+
+            await _dbSocialMediaSite.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
         }
@@ -198,12 +238,20 @@ namespace SocialMediaSite.Controllers
                 return NotFound();
             }
             
-            if (benutzer.Passwort.Trim() == altesPasswort){
-                benutzer.Passwort = benutzerData.Passwort;
+            if (Crypto.VerifyHashedPassword(benutzer.Passwort.Trim(), altesPasswort))
+            {
+                benutzer.Passwort = Crypto.HashPassword(benutzerData.Passwort);
                 _dbSocialMediaSite.Benutzer.Update(benutzer);
+
+                Logs log = new Logs();
+                log.LogInfo = "Benutzer ID: " + int.Parse(HttpContext.Request.Cookies["id_LoggedIn"]) + " hat das Passwort geändert.";
+                log.LogDate = DateTime.Now;
+                _dbSocialMediaSite.Logs.Add(log);
+
                 await _dbSocialMediaSite.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
 
             ViewBag.Error = "Falsches Passwort";
             return View();

@@ -6,30 +6,19 @@
 
 <div class="text-center">
     <h1 class="display-4">Posts</h1>
-    <div style="text-align:right; margin-right:100px;">
-        <a asp-controller="Benutzer" asp-action="FollowUser" asp-route-id_Benutzer="@ViewData["id_Benutzer"]" class="btn btn-outline-primary">Folgen</a>
-    </div>
-    <div class="table-responsive">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>@Html.DisplayNameFor(model => model.Titel)</th>
-                    <th>&nbsp;</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var post in Model)
-                {
-                        <tr>
-                            <td>@Html.DisplayFor(modelItem => post.Titel)<br />
-                            @Html.DisplayFor(modelItem => post.Inhalt)</td>
-                    
-                            <td>
-                                <a asp-action="DeletePost" class="btn btn-outline-danger" asp-route-id_post="@post.id_Post">Löschen</a>
-                            </td>
-                        </tr>
-                }
-            </tbody>
-        </table>
+    <a asp-controller="Benutzer" asp-action="FollowUser" asp-route-id_Benutzer="@ViewData["id_Benutzer"]" class="btn btn-outline-primary mb-5">@ViewBag.Follow</a>
+    <div class="text-center">
+        @foreach (var post in Model)
+        {
+            <div class="card mb-3" style="width: 24rem; margin: auto;">
+                <div class="card-body text-left">
+                    <h5 class="card-title">@Html.DisplayFor(modelItem => post.Titel)</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">@Html.DisplayFor(modelItem => post.benutzer.Benutzername)</h6>
+                    <h6 class="card-subtitle mb-2 text-muted">@Html.DisplayFor(modelItem => post.kategorie.KategorieName)</h6>
+                    <p class="card-text">@Html.DisplayFor(modelItem => post.Inhalt)</p>
+                    <p class="text-muted">@Html.DisplayFor(modelItem => post.PostDate);</p>
+                </div>
+            </div>
+        }
     </div>
 </div>

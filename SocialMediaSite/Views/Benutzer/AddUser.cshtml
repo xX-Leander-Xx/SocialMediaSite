@@ -25,15 +25,15 @@
                 </div>
                 <div class="form-group">
                     <label class="font-weight-bold" asp-for="Passwort"></label>
-                    <input asp-for="Passwort" class="form-control" />
+                    <input asp-for="Passwort" type="password" class="form-control" />
                 </div>
                 <a class="float-right justify-content-center" asp-action="LogIn">Zurück zum Login</a>
                 <div class="form-group">
                     <input class="btn btn-primary" type="submit" value="Konto Erstellen" />
                 </div>
-                @if (ViewBag.Long != null)
+                @if (ViewBag.CreateError != null)
                 {
-                    <p class="text-danger">@ViewBag.Long</p>
+                    <p class="text-danger">@ViewBag.CreateError</p>
                 }
 
             </form>

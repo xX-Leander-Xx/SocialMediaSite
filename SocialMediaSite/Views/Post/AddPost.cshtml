@@ -31,5 +31,9 @@
             <input class="btn btn-primary" type="submit" value="Speichern" />
             <a class="btn btn-danger" asp-action="Index">Zurück</a>
         </div>
+        @if (ViewBag.PostError != null)
+        {
+            <p class="text-danger">@ViewBag.PostError</p>
+        }
     </form>
 </div>

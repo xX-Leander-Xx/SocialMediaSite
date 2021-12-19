@@ -32,20 +32,26 @@ namespace SocialMediaSite.Controllers
         public async Task<IActionResult> FollowCategory(int id_kategorie)
         {
             var benutzerKategorie = await _dbSocialMediaSite.BenutzerKategorie.FirstOrDefaultAsync(b => b.fk_id_Benutzer == int.Parse(HttpContext.Request.Cookies["id_LoggedIn"]) && b.fk_id_Kategorie == id_kategorie);
-            
+
+            Logs log = new Logs();
+
             if (benutzerKategorie == null)
             {
                 benutzerKategorie = new BenutzerKategorie();
                 benutzerKategorie.fk_id_Kategorie = id_kategorie;
                 benutzerKategorie.fk_id_Benutzer = int.Parse(HttpContext.Request.Cookies["id_LoggedIn"]);
                 _dbSocialMediaSite.BenutzerKategorie.Add(benutzerKategorie);
-                await _dbSocialMediaSite.SaveChangesAsync();
+                log.LogInfo = "Benutzer ID: " + int.Parse(HttpContext.Request.Cookies["id_LoggedIn"]) + " hat Kategorie ID: " + benutzerKategorie.fk_id_Kategorie + " gefolgt";
             } 
             else
             {
                 _dbSocialMediaSite.BenutzerKategorie.Remove(benutzerKategorie);
-                await _dbSocialMediaSite.SaveChangesAsync();
+                log.LogInfo = "Benutzer ID: " + int.Parse(HttpContext.Request.Cookies["id_LoggedIn"]) + " hat Kategorie ID: " + benutzerKategorie.fk_id_Kategorie + " entfolgt";
             }
+
+            log.LogDate = DateTime.Now;
+            _dbSocialMediaSite.Logs.Add(log);
+            await _dbSocialMediaSite.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
         }

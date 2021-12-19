@@ -3,23 +3,30 @@
 }
 
 @model IEnumerable<Post>
+@using Microsoft.AspNetCore.Http;
 
 <div class="text-center">
     <h1 class="display-4">Posts</h1>
     <div>
-        <a asp-action="AddPost" class="btn btn-outline-primary">Neuer Post</a>
+        <a asp-action="AddPost" class="btn btn-outline-primary mb-5">Neuer Post</a>
     </div>
+    <div class="text-center">
+        @foreach (var post in Model)
+        {
+            <div class="card mb-3" style="width: 24rem; margin: auto;">
+                <div class="card-body text-left">
+                    <h5 class="card-title">@Html.DisplayFor(modelItem => post.Titel)</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">@Html.DisplayFor(modelItem => post.benutzer.Benutzername)</h6>
+                    <h6 class="card-subtitle mb-2 text-muted">@Html.DisplayFor(modelItem => post.kategorie.KategorieName)</h6>
+                    <p class="card-text">@Html.DisplayFor(modelItem => post.Inhalt)</p>
+                    <p class="text-muted">@Html.DisplayFor(modelItem => post.PostDate);</p>
+                    @if (ViewBag.id_Benutzer == post.fk_id_Benutzer || User.IsInRole("Admin"))
+                    {
+                        <a asp-action="DeletePost" class="card-link" asp-route-id_post="@post.id_Post">Löschen</a>
+                    }
 
-    @foreach (var post in Model)
-    {
-        <div class="card text-center" style="width: 24rem;">
-            <div class="card-body align-items-center">
-                <h5 class="card-title">@Html.DisplayFor(modelItem => post.Titel)</h5>
-                <h6 class="card-subtitle mb-2 text-muted">@Html.DisplayFor(modelItem => post.benutzer.Benutzername)</h6>
-                <p class="card-text">@Html.DisplayFor(modelItem => post.Inhalt)</p>
-                <p class="text-muted">@Html.DisplayFor(modelItem => post.PostDate);</p>
-                <a asp-action="DeletePost" class="card-link" asp-route-id_post="@post.id_Post">Löschen</a>
+                </div>
             </div>
-        </div>
-    }
+        }
+    </div>
 </div>

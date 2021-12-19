@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -20,5 +21,8 @@ namespace SocialMediaSite.Models
         [StringLength(20)]
         public string Passwort { get; set; }
         public string isAdmin { get; set; }
+        public BenutzerKategorie BenutzerKategorie { get; set; }
+        public ICollection<BenutzerBenutzer> BenutzerBenutzerFolgen { get; set; }
+        public ICollection<BenutzerBenutzer> BenutzerBenutzerGefolgt { get; set; }
     }
 }

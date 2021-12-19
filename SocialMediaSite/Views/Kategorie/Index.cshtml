@@ -10,8 +10,7 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>@Html.DisplayNameFor(model => model.KategorieName)</th>
-                    <th>&nbsp;</th>
+                    <th class="border-0">@Html.DisplayNameFor(model => model.KategorieName)</th>
                 </tr>
             </thead>
             <tbody>
@@ -20,7 +19,7 @@
                     <tr>
                         <td>@Html.DisplayFor(modelItem => kategorie.KategorieName)<br />
                         <td>
-                            <a asp-controller="Post" asp-action="KategoriePost" class="btn btn-primary" asp-route-id_kategorie="@kategorie.id_Kategorie">Posts Ansehen</a>
+                            <a asp-controller="Post" asp-action="KategoriePost" class="btn btn-outline-primary" asp-route-id_kategorie="@kategorie.id_Kategorie">Posts Ansehen</a>
                         </td>
                     </tr>
                 }

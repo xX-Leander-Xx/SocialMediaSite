@@ -19,5 +19,19 @@ namespace SocialMediaSite.Helpers
         public DbSet<Kategorie> Kategorie { get; set; }
         public DbSet<BenutzerKategorie> BenutzerKategorie { get; set; }
         public DbSet<BenutzerBenutzer> BenutzerBenutzer { get; set; }
+        public DbSet<Logs> Logs { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<BenutzerBenutzer>()
+              .HasOne(x => x.benutzerFolgen)
+              .WithMany(x => x.BenutzerBenutzerGefolgt)
+              .HasForeignKey(x => x.fk_id_BenutzerFolgen);
+
+            modelBuilder.Entity<BenutzerBenutzer>()
+              .HasOne(x => x.benutzerGefolgt)
+              .WithMany(x => x.BenutzerBenutzerFolgen)
+              .HasForeignKey(x => x.fk_id_BenutzerGefolgt);
+        }
     }
 }

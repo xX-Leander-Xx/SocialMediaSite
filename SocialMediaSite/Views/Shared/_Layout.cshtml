@@ -27,10 +27,10 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Kategorie" asp-action="Index">Kategorien</a>
                         </li>
-                        <li class="nav-item float-right">
+                        <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Benutzer" asp-action="ChangeUser">Profil</a>
                         </li>
-                        <li class="nav-item float-right">
+                        <li class="nav-item  ml-auto mr-1">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Benutzer" asp-action="LogOut">LogOut</a>
                         </li>
                     </ul>
@@ -43,12 +43,6 @@
             @RenderBody()
         </main>
     </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2021 - SocialMediaSite - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

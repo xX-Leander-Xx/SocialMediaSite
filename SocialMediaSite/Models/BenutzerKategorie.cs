@@ -11,8 +11,14 @@ namespace SocialMediaSite.Models
         [Key]
         [ReadOnly(true)]
         public int id_BenutzerKategorie { get; set; }
+
+        [ForeignKey("benutzer")]
         public int fk_id_Benutzer { get; set; }
+        public virtual Benutzer benutzer { get; set; }
+
+        [ForeignKey("kategorie")]
         public int fk_id_Kategorie { get; set; }
+        public virtual Kategorie kategorie { get; set; }
 
     }
 }
